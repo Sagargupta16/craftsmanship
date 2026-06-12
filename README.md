@@ -77,7 +77,7 @@ Issues and PRs welcome. If you've spotted a gap or have a new skill to propose:
 
 ## Also By This Author
 
-- [`sagar-dev-skills`](https://github.com/Sagargupta16/claude-skills) -- Claude Code plugin marketplace with 25 plugins including hooks, agents, and commands
+- [`sagar-dev-skills`](https://github.com/Sagargupta16/claude-skills) -- Claude Code plugin marketplace with 14 plugins including hooks, agents, and commands
 - [`claude-cost-optimizer`](https://github.com/Sagargupta16/claude-cost-optimizer) -- Save 30-60% on Claude Code costs
 
 ## License

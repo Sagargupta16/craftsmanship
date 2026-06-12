@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.0.0] - 2026-04-19
+## 2026-04-19
 
 ### Added
 - Initial release with 6 skills:

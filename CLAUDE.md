@@ -41,7 +41,6 @@ No test suite. `npx -y @sagargupta1610/skillcheck lint ./skills` is the conforma
 - `CONTRIBUTING.md` -- required frontmatter, house format, agent-agnostic rule, pre-PR lint command
 - `CHANGELOG.md` -- dated entries, intentionally untagged (no git tags, no GitHub releases)
 - `.github/workflows/ci.yml` -- skillcheck lint + lychee link check
-- `.lycheeignore` -- URL patterns the link check must skip (localhost examples, placeholder DSNs)
 - `renovate.json` -- extends `github>Sagargupta16/shared-workflows` preset
 
 ## Gotchas
@@ -49,7 +48,7 @@ No test suite. `npx -y @sagargupta1610/skillcheck lint ./skills` is the conforma
 - Skill names (audit, verify, review) collide with skills already available in local sessions (user-level `audit`, built-in `verify`/`review`) -- when editing, confirm you are in `community/craftsmanship/skills/`, not `~/.claude/skills/`.
 - Renovate config comes from the shared-workflows preset; the only pinned deps it can see are the GitHub Actions in `ci.yml`.
 - Content must stay agent-agnostic (targets 75+ agents) -- no Claude Code-specific tool names or paths inside skill bodies.
-- `CLAUDE.md` links to the parent workspace, so it is excluded from the CI link check (those paths do not exist inside the repo).
+- `CLAUDE.md` links to the parent workspace, so the CI link check lists its inputs explicitly and leaves this file out (those paths do not exist inside the repo).
 - Nested code fences are the known trap: a bare three-backtick fence inside a fenced markdown example closes it early and scrambles the rest. Use four backticks for the outer fence and verify with `gh api markdown`. skillcheck does not catch this.
 
 ## Repo-specific rules

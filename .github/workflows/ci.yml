@@ -31,14 +31,15 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      # CLAUDE.md is excluded on purpose: it links to the parent workspace
-      # that this repo lives in, and those paths do not exist inside the repo.
-      # URL-level exclusions (localhost examples, DSNs) live in .lycheeignore.
+      # Inputs are listed explicitly rather than globbed, because CLAUDE.md
+      # links to the parent workspace this repo lives in and those paths do
+      # not exist inside the repo. Keep this list in step with new docs.
       - name: lychee
         uses: lycheeverse/lychee-action@v2
         with:
-          # Mail links are skipped by default (opt in with --include-mail).
           args: >-
             --no-progress
-            --exclude-path ./CLAUDE.md
-            './**/*.md'
+            'README.md'
+            'CONTRIBUTING.md'
+            'CHANGELOG.md'
+            './skills/**/*.md'

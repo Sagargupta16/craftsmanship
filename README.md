@@ -90,7 +90,6 @@ craftsmanship/
 ├── CLAUDE.md
 ├── LICENSE
 ├── .gitignore
-├── .lycheeignore
 ├── renovate.json
 ├── .github/workflows/ci.yml
 └── skills/

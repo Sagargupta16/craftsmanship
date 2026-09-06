@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  skills:
+    name: Lint skills
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      # SKILL.md conformance linter. Fails on missing/duplicate frontmatter,
+      # bad names, malformed files. First-party tooling: the package is
+      # published by this repo's author, not an ecosystem standard.
+      # Pinned because Renovate has no manifest to read it from, so a new
+      # major would otherwise silently change what CI enforces. Bump by hand.
+      - name: skillcheck lint
+        run: npx -y @sagargupta1610/skillcheck@0.2.2 lint ./skills
+
+  links:
+    name: Check links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      # Every markdown file is globbed, so new docs are covered without
+      # editing this workflow. CLAUDE.md is the one exclusion: it links to the
+      # parent workspace this repo lives in and those paths do not exist here.
+      # --exclude-path takes a regex against the path, so the bare filename
+      # matches; './CLAUDE.md' does not.
+      - name: lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --no-progress
+            --exclude-path CLAUDE.md
+            './**/*.md'

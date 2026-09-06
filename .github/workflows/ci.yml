@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  skills:
+    name: Lint skills
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+
+      # Conformance suite for the Agent Skills SKILL.md spec.
+      # Fails on missing/duplicate frontmatter, bad names, malformed files.
+      - name: skillcheck lint
+        run: npx -y @sagargupta1610/skillcheck lint ./skills
+
+  links:
+    name: Check links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      # CLAUDE.md is excluded on purpose: it links to the parent workspace
+      # that this repo lives in, and those paths do not exist inside the repo.
+      # URL-level exclusions (localhost examples, DSNs) live in .lycheeignore.
+      - name: lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --no-progress
+            --exclude-mail
+            --exclude-path ./CLAUDE.md
+            './**/*.md'

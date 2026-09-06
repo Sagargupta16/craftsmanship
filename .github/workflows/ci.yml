@@ -20,10 +20,13 @@ jobs:
         with:
           node-version: 22
 
-      # Conformance suite for the Agent Skills SKILL.md spec.
-      # Fails on missing/duplicate frontmatter, bad names, malformed files.
+      # SKILL.md conformance linter. Fails on missing/duplicate frontmatter,
+      # bad names, malformed files. First-party tooling: the package is
+      # published by this repo's author, not an ecosystem standard.
+      # Pinned because Renovate has no manifest to read it from, so a new
+      # major would otherwise silently change what CI enforces. Bump by hand.
       - name: skillcheck lint
-        run: npx -y @sagargupta1610/skillcheck lint ./skills
+        run: npx -y @sagargupta1610/skillcheck@0.2.2 lint ./skills
 
   links:
     name: Check links
@@ -31,15 +34,15 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      # Inputs are listed explicitly rather than globbed, because CLAUDE.md
-      # links to the parent workspace this repo lives in and those paths do
-      # not exist inside the repo. Keep this list in step with new docs.
+      # Every markdown file is globbed, so new docs are covered without
+      # editing this workflow. CLAUDE.md is the one exclusion: it links to the
+      # parent workspace this repo lives in and those paths do not exist here.
+      # --exclude-path takes a regex against the path, so the bare filename
+      # matches; './CLAUDE.md' does not.
       - name: lychee
         uses: lycheeverse/lychee-action@v2
         with:
           args: >-
             --no-progress
-            'README.md'
-            'CONTRIBUTING.md'
-            'CHANGELOG.md'
-            './skills/**/*.md'
+            --exclude-path CLAUDE.md
+            './**/*.md'

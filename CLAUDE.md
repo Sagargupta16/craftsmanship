@@ -28,7 +28,7 @@ Nothing to run. Edit markdown, commit, push. Consumers pull the latest from GitH
 
 ## Test
 
-No test suite. `npx -y @sagargupta1610/skillcheck lint ./skills` is the conformance check, and CI runs it plus a lychee link check on every push and PR. Feature verification is still manual: install into an agent and confirm the skill activates on its trigger.
+No test suite. `npx -y @sagargupta1610/skillcheck@0.2.2 lint ./skills` is the conformance check, and CI runs it plus a lychee link check on every push and PR. Feature verification is still manual: install into an agent and confirm the skill activates on its trigger.
 
 ## Entry points
 
@@ -46,9 +46,9 @@ No test suite. `npx -y @sagargupta1610/skillcheck lint ./skills` is the conforma
 ## Gotchas
 
 - Skill names (audit, verify, review) collide with skills already available in local sessions (user-level `audit`, built-in `verify`/`review`) -- when editing, confirm you are in `community/craftsmanship/skills/`, not `~/.claude/skills/`.
-- Renovate config comes from the shared-workflows preset; the only pinned deps it can see are the GitHub Actions in `ci.yml`.
+- Renovate config comes from the shared-workflows preset; the only deps it can see are the GitHub Actions in `ci.yml`. That preset sets `automerge: true` on the grouped monthly PR, so those Action bumps now land on `main` by themselves with the two `ci.yml` jobs as the only gate. The `skillcheck` version is pinned in the `npx` call, which Renovate cannot read -- bump it by hand.
 - Content must stay agent-agnostic (targets 75+ agents) -- no Claude Code-specific tool names or paths inside skill bodies.
-- `CLAUDE.md` links to the parent workspace, so the CI link check lists its inputs explicitly and leaves this file out (those paths do not exist inside the repo).
+- `CLAUDE.md` links to the parent workspace, so the CI link check excludes it with `--exclude-path CLAUDE.md` (those paths do not exist inside the repo). That flag is a regex over the path: the bare filename matches, `./CLAUDE.md` does not.
 - Nested code fences are the known trap: a bare three-backtick fence inside a fenced markdown example closes it early and scrambles the rest. Use four backticks for the outer fence and verify with `gh api markdown`. skillcheck does not catch this.
 
 ## Repo-specific rules

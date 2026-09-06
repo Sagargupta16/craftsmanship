@@ -12,14 +12,16 @@ Additions to an existing skill do not need an issue first. Fixing a wrong claim,
 
 ## Required Frontmatter
 
-Every skill is one file at `skills/<name>/SKILL.md`. It opens with YAML frontmatter carrying exactly two keys:
+Every skill is one file at `skills/<name>/SKILL.md`. It opens with YAML frontmatter. All seven skills here carry `name` and `description` and nothing else, and new ones should match:
 
 ```yaml
 ---
-name: debug
-description: Use when a test fails, a bug is reported, an error is pasted in, or a fix did not work. Enforces reproduce-before-theorize, reading the actual error, narrowing by bisection, one falsifiable hypothesis at a time, and a stop rule instead of guess-loops.
+name: <skill-name>
+description: Use when <trigger>, <trigger>, or <trigger>. Enforces <the specific behaviour the skill encodes>.
 ---
 ```
+
+For a filled-in version, read the frontmatter of any existing skill.
 
 - `name` matches the directory name, lowercase, one word where possible
 - `description` is what the agent matches against, so it must name the triggers explicitly. Start it with "Use when ..." and list the concrete situations, then summarise what the skill covers. A description that only says what the skill is about will not fire.
@@ -30,7 +32,7 @@ Read two or three existing skills before writing one. The shape is:
 
 1. `# Title` -- the discipline, not the filename
 2. Optional `## Quick Reference` table -- a situation-to-action lookup. Only `plan`, `debug`, and `verify` have one; add it when the skill has a natural "which case am I in" entry point.
-3. Body sections -- `##` headings, tables and fenced blocks over prose. Numbered `code` blocks are used for ordered procedures.
+3. Body sections -- `##` headings, tables and fenced blocks over prose. An ordered procedure goes in a plain fenced block with one numbered step per line, like The Loop in `skills/debug/SKILL.md`.
 4. Required closing `## Anti-Patterns` table -- three columns: `Anti-Pattern | Problem | Do Instead`. This is not optional; it is where most of the value lands.
 
 Other conventions to match:
@@ -51,13 +53,13 @@ These skills install into 75+ different agents, so the content cannot assume any
 
 ## Check Before Opening a PR
 
-Lint the skills against the Agent Skills spec:
+Lint the skills for SKILL.md conformance:
 
 ```bash
-npx -y @sagargupta1610/skillcheck lint ./skills
+npx -y @sagargupta1610/skillcheck@0.2.2 lint ./skills
 ```
 
-Expect `0 error(s), 0 warning(s)`. CI runs the same command on every push and pull request, plus a link check over the markdown.
+Expect `0 error(s), 0 warning(s)`. CI runs the same pinned command on every push and pull request, plus a link check over the markdown. `skillcheck` is first-party tooling maintained by this repo's author ([Sagargupta16/skillcheck](https://github.com/Sagargupta16/skillcheck)), not an ecosystem standard, so treat a failure as a house-rule failure.
 
 Two things the linter cannot catch, so check them by hand:
 

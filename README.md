@@ -1,6 +1,6 @@
 # craftsmanship
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![CI](https://github.com/Sagargupta16/craftsmanship/actions/workflows/ci.yml/badge.svg)](https://github.com/Sagargupta16/craftsmanship/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Skills that encode engineering discipline -- think before coding, verify before claiming done, ship with care.
 
@@ -12,7 +12,7 @@ These are agent-agnostic skills compatible with 75+ AI coding agents (Claude Cod
 npx skills add sagargupta16/craftsmanship
 ```
 
-The CLI auto-detects the coding agents you have installed and fans the skills out to each one; if it finds none, it prompts you to pick. Skills are symlinked into each agent's conventional skills directory -- pass `--copy` if you want real files instead.
+The CLI detects which coding agents you have installed; if it finds none, it prompts you to pick. The run is interactive by default: you confirm what gets installed, and you choose between symlinking into each agent's skills directory (upstream's recommended method) and copying real files. `-y` skips the confirmations, `--all` installs every skill to every agent without them, and `--copy` forces real files. When an agent runs the command rather than a human, the CLI detects that and installs non-interactively.
 
 Other flags worth knowing:
 
@@ -36,15 +36,7 @@ npx skills list                                # see what is installed
 
 ## What a Skill Looks Like
 
-Each file is YAML frontmatter plus a markdown body written to be read by an agent mid-task. The tables are the load-bearing part -- they turn a vague instruction ("verify it works") into a lookup. From [`skills/verify/SKILL.md`](skills/verify/SKILL.md):
-
-| Change Type | Minimum Verification |
-|-------------|---------------------|
-| Backend API | Run server, hit endpoints, check responses |
-| Frontend UI | Start dev server, test in browser, check edge cases |
-| Database migration | Run migration, verify schema, test rollback |
-| Infrastructure/IaC | Plan/validate, check for destructive changes |
-| Bug fix | Reproduce bug, apply fix, confirm fix, check for regressions |
+Each file is YAML frontmatter plus a markdown body written to be read by an agent mid-task. The tables are the load-bearing part -- they turn a vague instruction ("verify it works") into a lookup. [`skills/verify/SKILL.md`](skills/verify/SKILL.md) opens with a Change Type to Minimum Verification table, so an agent that just finished a database migration reads "Run migration, verify schema, test rollback" instead of guessing.
 
 The `description` field in the frontmatter is what the agent matches against, so it names the triggers explicitly ("Use when completing a task, before claiming work is done, or before creating a PR"). The body is what the agent reads once triggered.
 
@@ -63,11 +55,11 @@ Use `--skill` to install a subset instead of the whole set:
 
 ```bash
 npx skills add sagargupta16/craftsmanship --skill plan
-npx skills add sagargupta16/craftsmanship --skill debug verify review
+npx skills add sagargupta16/craftsmanship --skill debug --skill verify --skill review
 npx skills add sagargupta16/craftsmanship --list   # see what is available first
 ```
 
-`--agent` narrows the install the same way (`--agent claude-code cursor`), and `--agent '*'` targets every agent the CLI knows about.
+`--agent` narrows the install the same way (`--agent claude-code --agent cursor`), and `--agent '*'` targets every agent the CLI knows about.
 
 ## Compatible Agents
 
@@ -75,7 +67,8 @@ Installed skills work with any agent that reads `.agents/skills/` or an agent-sp
 
 - Claude Code (`.claude/skills/`), Cursor, Codex, GitHub Copilot, Gemini CLI, OpenCode
 - Cline, Windsurf, Zed, Warp, Amp, Antigravity, Continue, Kilo Code, Roo Code, Trae
-- Augment, Goose, Droid, Junie, Qwen Code, Grok Build, Kiro CLI, OpenHands, Devin for Terminal
+- Augment, Goose, Droid, Junie, Qwen Code, Grok Build, Kiro CLI, OpenHands
+- Deep Agents, Firebender, Kimi Code CLI, Devin for Terminal
 - Any other agent that supports the SKILL.md format
 
 The full, authoritative list of agents and the exact install paths each one uses lives in the upstream [supported agents table](https://github.com/vercel-labs/skills#supported-agents).
@@ -106,13 +99,9 @@ Each skill is self-contained -- a single `SKILL.md` with YAML frontmatter and ma
 
 ## Contributing
 
-Issues and PRs welcome. If you've spotted a gap or have a new skill to propose:
+Issues and PRs welcome -- a new skill, a gap in an existing one, or a wrong claim to fix.
 
-1. Open an issue describing the skill and when it should activate
-2. Discuss scope -- is this a new skill or an addition to existing?
-3. Follow the existing format: body, then Anti-Patterns table
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the required frontmatter, the house format, and how to lint a skill before opening a PR.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the proposal flow, the required frontmatter, the house format, and how to lint a skill before opening a PR.
 
 ## Also By This Author
 

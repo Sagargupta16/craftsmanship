@@ -10,7 +10,7 @@
 
 ## Project
 
-Agent-agnostic AI coding skills that encode engineering discipline (plan, guard, verify, review, audit, ship). Public OSS, MIT, consumed by any agent supporting the SKILL.md format via the skills.sh ecosystem.
+Agent-agnostic AI coding skills that encode engineering discipline (plan, guard, debug, verify, review, audit, ship). Public OSS, MIT, consumed by any agent supporting the SKILL.md format via the skills.sh ecosystem.
 
 Distribution: `npx skills add sagargupta16/craftsmanship` -- the CLI reads this repo straight from GitHub and fans skills out to each agent's skills directory.
 
@@ -28,27 +28,32 @@ Nothing to run. Edit markdown, commit, push. Consumers pull the latest from GitH
 
 ## Test
 
-No test suite. Verification is manual: install into an agent and confirm the skill activates on its trigger.
+No test suite. `npx -y @sagargupta1610/skillcheck lint ./skills` is the conformance check, and CI runs it plus a lychee link check on every push and PR. Feature verification is still manual: install into an agent and confirm the skill activates on its trigger.
 
 ## Entry points
 
-- `skills/<name>/SKILL.md` -- each of the 6 skills is a single self-contained file (plan, guard, verify, review, audit, ship)
+- `skills/<name>/SKILL.md` -- each of the 7 skills is a single self-contained file (plan, guard, debug, verify, review, audit, ship)
 - `README.md` -- public docs, install instructions, skill table
 
 ## Key files
 
 - `README.md` -- source of truth for the skill list and philosophy; update the table when skills change
-- `CHANGELOG.md` -- dated entries per release (initial release 2026-04-19)
+- `CONTRIBUTING.md` -- required frontmatter, house format, agent-agnostic rule, pre-PR lint command
+- `CHANGELOG.md` -- dated entries, intentionally untagged (no git tags, no GitHub releases)
+- `.github/workflows/ci.yml` -- skillcheck lint + lychee link check
+- `.lycheeignore` -- URL patterns the link check must skip (localhost examples, placeholder DSNs)
 - `renovate.json` -- extends `github>Sagargupta16/shared-workflows` preset
 
 ## Gotchas
 
 - Skill names (audit, verify, review) collide with skills already available in local sessions (user-level `audit`, built-in `verify`/`review`) -- when editing, confirm you are in `community/craftsmanship/skills/`, not `~/.claude/skills/`.
-- No CI workflows in-repo; Renovate config comes from the shared-workflows preset.
-- Content must stay agent-agnostic (targets 45+ agents) -- no Claude Code-specific tool names or paths inside skill bodies.
+- Renovate config comes from the shared-workflows preset; the only pinned deps it can see are the GitHub Actions in `ci.yml`.
+- Content must stay agent-agnostic (targets 75+ agents) -- no Claude Code-specific tool names or paths inside skill bodies.
+- `CLAUDE.md` links to the parent workspace, so it is excluded from the CI link check (those paths do not exist inside the repo).
+- Nested code fences are the known trap: a bare three-backtick fence inside a fenced markdown example closes it early and scrambles the rest. Use four backticks for the outer fence and verify with `gh api markdown`. skillcheck does not catch this.
 
 ## Repo-specific rules
 
-- Every skill follows the existing format: YAML frontmatter (`name`, `description` with activation triggers), markdown body, closing Anti-Patterns table. Only `plan` and `verify` also have a Quick Reference table up top. Match the existing files for new skills.
+- Every skill follows the existing format: YAML frontmatter (`name`, `description` with activation triggers), markdown body, closing Anti-Patterns table. Only `plan`, `debug` and `verify` also have a Quick Reference table up top. Match the existing files for new skills.
 - Adding or renaming a skill requires updating the README skill table and CHANGELOG in the same commit.
-- New skills go through an issue first per CONTRIBUTING guidance in README (discuss scope: new skill vs addition to existing).
+- New skills go through an issue first per [CONTRIBUTING.md](CONTRIBUTING.md) (discuss scope: new skill vs addition to existing).

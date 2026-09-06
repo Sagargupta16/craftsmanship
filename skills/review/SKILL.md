@@ -75,7 +75,7 @@ Review in this priority order:
 
 ### What Makes a Good Comment
 
-```markdown
+````markdown
 blocking: SQL injection risk in `getUserByEmail`
 
 The query uses string concatenation:
@@ -89,7 +89,7 @@ db.query('SELECT * FROM users WHERE email = $1', [email])
 ```
 
 This prevents attackers from injecting SQL via crafted email values.
-```
+````
 
 **Good comments**:
 - State the problem
